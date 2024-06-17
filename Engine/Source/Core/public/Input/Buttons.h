@@ -18,6 +18,7 @@ namespace GameEngine
 			LEFT,
 			RIGHT,
 			SPACEBAR,
+			F2,
 
 			UNKNOWN
 		};
