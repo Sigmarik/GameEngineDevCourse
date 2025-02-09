@@ -271,7 +271,19 @@ namespace GameEngine
 			Math::Matrix4x4f view = Core::Math::ViewMatrixLH(pos, target, up);
 			Math::Matrix4x4f proj = Core::Math::ProjectionMatrixLH(0.25f * DirectX::XM_PI, Core::MainWindowsApplication->GetAspectRatio(), 1.0f, 1000.0f);
 
-			Math::Matrix4x4f world = Math::Matrix4x4f::Identity();
+			//! It is framerate-dependant, it is not scalable, and it is generally a bad practice to implement time tracking in a simmilar way.
+			//! But I do not feel like writing a time module for the engine just now, so... yeah.
+			//! Sorry for not showing off for brownie points.
+			//! 
+			//! Though if you want to see an example of a code that I write willingly, here is a game dev framework of mine:
+			//! https://github.com/Sigmarik/graphics-engine
+			//! And here is its time module implementation:
+			//! https://github.com/Sigmarik/graphics-engine/tree/master/lib/time
+			static float s_time = 0;
+			s_time += 0.01f;
+
+			Math::Matrix4x4f world = Core::Math::RotationMatrixY(s_time);
+
 			Math::Matrix4x4f worldViewProj = world * view * proj;
 
 			ObjectConstants objConstants;

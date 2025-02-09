@@ -114,5 +114,10 @@ namespace GameEngine::Core
 			float NearZ,
 			float FarZ
 		);
+
+		// Constructs a rotation matrix around the vertical axis (Y+).
+		CORE_API Matrix4x4f RotationMatrixY(
+			float angle
+		);
 	}
 }

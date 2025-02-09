@@ -96,5 +96,28 @@ namespace GameEngine::Core
 
 			return result;
 		}
+
+		CORE_API Matrix4x4f RotationMatrixY(
+			float angle
+		)
+		{
+			Matrix4x4f result;
+
+			result.SetElement(cos(angle), 0, 0);
+			result.SetElement(0.0f,       0, 1);
+			result.SetElement(sin(angle), 0, 2);
+
+			result.SetElement(0.0f, 1, 0);
+			result.SetElement(1.0f, 1, 1);
+			result.SetElement(0.0f, 1, 2);
+
+			result.SetElement(-sin(angle), 2, 0);
+			result.SetElement(0.0f,        2, 1);
+			result.SetElement(cos(angle),  2, 2);
+
+			result.SetElement(1.0f, 3, 3);
+
+			return result;
+		}
 	}
 }

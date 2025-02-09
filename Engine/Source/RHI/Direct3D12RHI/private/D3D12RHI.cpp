@@ -71,6 +71,46 @@ namespace GameEngine
 			return m_d3d12Private->CreateMesh(vertices.begin(), vertices.size(), sizeof(Vertex), indices.begin(), indices.size(), sizeof(uint16_t));
 		}
 
+		Mesh::Ptr D3D12RHI::CreatePyramidMesh()
+		{
+			// Didn't feel like changing indices of the mesh, so off with the extra vertices we go!
+			array<Vertex, 9> vertices =
+			{
+				Vertex({ Math::Vector3f(-1.0f, -1.0f, -1.0f), Math::Vector4f((float*)&DirectX::Colors::White) }),
+				Vertex({ Math::Vector3f(-1.0f, +1.0f, -1.0f), Math::Vector4f((float*)&DirectX::Colors::Black) }),
+				Vertex({ Math::Vector3f(+1.0f, +1.0f, -1.0f), Math::Vector4f((float*)&DirectX::Colors::Red) }),
+				Vertex({ Math::Vector3f(+1.0f, -1.0f, -1.0f), Math::Vector4f((float*)&DirectX::Colors::Green) }),
+				Vertex({ Math::Vector3f(-1.0f, -1.0f, +1.0f), Math::Vector4f((float*)&DirectX::Colors::Blue) }),
+				Vertex({ Math::Vector3f(-1.0f, +1.0f, +1.0f), Math::Vector4f((float*)&DirectX::Colors::Yellow) }),
+				Vertex({ Math::Vector3f(+1.0f, +1.0f, +1.0f), Math::Vector4f((float*)&DirectX::Colors::Cyan) }),
+				Vertex({ Math::Vector3f(+1.0f, -1.0f, +1.0f), Math::Vector4f((float*)&DirectX::Colors::Magenta) }),
+				Vertex({ Math::Vector3f(+0.0f, +1.0f, +0.0f), Math::Vector4f((float*)&DirectX::Colors::Cyan) }),
+			};
+
+			array<uint16_t, 3 * 6> indices =
+			{
+				// front face
+				0, 8, 3,
+
+				// back face
+				4, 7, 8,
+
+				// left face
+				4, 8, 0,
+
+				// right face
+				3, 8, 7,
+
+				// bottom face
+				4, 0, 3,
+				4, 3, 7
+			};
+
+			// I just wish there was a model loader availible so I could shove a model of a rat into it.
+			// https://www.youtube.com/watch?v=3X-iqFRGqbc
+			return m_d3d12Private->CreateMesh(vertices.begin(), vertices.size(), sizeof(Vertex), indices.begin(), indices.size(), sizeof(uint16_t));
+		}
+
 		Material::Ptr D3D12RHI::GetMaterial(const std::string& name)
 		{
 			return m_d3d12Private->GetMaterial(name);
