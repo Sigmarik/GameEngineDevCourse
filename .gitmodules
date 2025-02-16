@@ -4,3 +4,6 @@
 [submodule "Engine/External/Direct3DTexture"]
 	path = Engine/External/Direct3DTexture
 	url = https://github.com/microsoft/DirectXTex.git
+[submodule "Engine/External/Inih"]
+	path = Engine/External/Inih
+	url = https://github.com/Blandinium/inih.git

@@ -9,7 +9,19 @@ namespace GameEngine::Core
 		return Math::ViewMatrixLH(m_Position, m_ViewDir, Math::Vector3f(0.0f, 1.0f, 0.0f));
 	}
 
-	void Camera::Rotate(float dx, float dy)
+    Math::Vector3f Camera::GetUpDir() const
+    {
+        Math::Vector3f right = GetRightDir();
+        return right.CrossProduct(m_ViewDir).Normalized();
+    }
+
+    Math::Vector3f Camera::GetRightDir() const
+    {
+        Math::Vector3f up = Math::Vector3f(0.0f, 1.0f, 0.0f);
+        return m_ViewDir.CrossProduct(up).Normalized();
+    }
+
+    void Camera::Rotate(float dx, float dy)
 	{
         Math::Vector3f up = Math::Vector3f(0.0f, 1.0f, 0.0f);
         Math::Vector3f right = m_ViewDir.CrossProduct(up).Normalized();

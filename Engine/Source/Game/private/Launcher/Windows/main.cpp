@@ -6,6 +6,8 @@
 #include <array.h>
 #include <iostream>
 
+#include <Input.h>
+
 #if defined(DEBUG) || defined(_DEBUG)
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
@@ -44,6 +46,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	GameEngine::Core::g_MainWindowsApplication = new GameEngine::Core::Window();
 	GameEngine::Core::g_MainWindowsApplication->Init(hInstance);
+
+	// Damn, if I were to write that path on a piece of paper,
+	// the meaningful part of it would only start somewhere
+	// in Vancouver of all places.
+	const char inputConfigPath[] = "..\\..\\..\\..\\..\\Assets\\InputBindings\\default.ini";
+	GameEngine::Core::InputManager::importConfig(inputConfigPath);
 
 	std::unique_ptr<GameEngine::Game> game = std::make_unique<GameEngine::Game>(&WindowsMessageLoop);
 

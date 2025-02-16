@@ -2,6 +2,7 @@
 file(GLOB
 	PRIVATE_FILES
 	private/*.cpp
+	private/*.c
 	private/*.h
 )
 file(GLOB
@@ -9,7 +10,7 @@ file(GLOB
 	public/*.h
 )
 
-if (WINDOWS)
+if(WINDOWS)
 	file(GLOB
 		PLATFORM_PUBLIC_FILES
 		public/Window/*.h
@@ -32,8 +33,8 @@ generate_export_header(Core EXPORT_FILE_NAME export.h EXPORT_MACRO_NAME CORE_API
 
 target_compile_definitions(Core
 	PRIVATE
-		Core_EXPORTS
-		UNICODE)
+	Core_EXPORTS
+	UNICODE)
 
 # Set Sources
 target_sources(Core
@@ -44,14 +45,15 @@ target_sources(Core
 )
 
 # include dir
-target_include_directories(Core 
+target_include_directories(Core
 	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/public
 	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/private
+	PRIVATE ${LIB_DIR}/Inih
 )
 
 # windows-specific
-if (WINDOWS)
-	target_include_directories(Core 
+if(WINDOWS)
+	target_include_directories(Core
 		PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/private/Window/Windows
 		PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/private/Debug/Windows
 	)
@@ -63,19 +65,19 @@ target_link_libraries(Core PRIVATE
 
 target_precompile_headers(Core
 	PRIVATE
-		<unordered_map>
-		<vector>
-		<string>
-		<cassert>
-		<format>
-		<functional>
-		<thread>
-		<mutex>
-		<condition_variable>
-		<tuple>
-		<utility>
-		<cstdint>
-		<limits>
-		<chrono>
-		<format>
+	<unordered_map>
+	<vector>
+	<string>
+	<cassert>
+	<format>
+	<functional>
+	<thread>
+	<mutex>
+	<condition_variable>
+	<tuple>
+	<utility>
+	<cstdint>
+	<limits>
+	<chrono>
+	<format>
 )

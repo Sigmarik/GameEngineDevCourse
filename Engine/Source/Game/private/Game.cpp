@@ -48,6 +48,24 @@ namespace GameEngine
 
 	void Game::Update(float dt)
 	{
+		Math::Vector3f camPos = Core::g_MainCamera->GetPosition();
+		Math::Vector3f input = GameEngine::Core::solveOmnidirectionalInput(
+			m_inputForward, m_inputBack, 
+			m_inputLeft, m_inputRight, 
+			m_inputUp, m_inputDown
+		);
+
+		// If only there was a matrix for this...
+		// Cuz I am too lazy to make a function for it.
+		Math::Vector3f rotatedInput =
+			-Core::g_MainCamera->GetRightDir() * input.x +
+			 Core::g_MainCamera->GetUpDir() * input.y +
+			-Core::g_MainCamera->GetViewDir() * input.z;
+
+		// No, I am not introducing the speed variable for demonstratory purposes.
+		camPos = camPos + rotatedInput * dt * 100.0f;
+		Core::g_MainCamera->SetPosition(camPos);
+
 		for (int i = 0; i < m_Objects.size(); ++i)
 		{
 			Math::Vector3f pos = m_Objects[i]->GetPosition();
