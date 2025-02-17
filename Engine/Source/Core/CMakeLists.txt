@@ -1,3 +1,5 @@
+set(LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../External)
+
 # get all files
 file(GLOB
 	PRIVATE_FILES
