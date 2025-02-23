@@ -18,11 +18,29 @@ namespace GameEngine
 		m_renderThread = std::make_unique<Render::RenderThread>();
 
 		// How many objects do we want to create
-		for (int i = 0; i < 3; ++i)
+		for (int i = 0; i < 100; ++i)
 		{
 			m_Objects.push_back(new GameObject());
-			Render::RenderObject** renderObject = m_Objects.back()->GetRenderObjectRef();
+			GameObject& object = *m_Objects.back();
+
+			Render::RenderObject** renderObject = object.GetRenderObjectRef();
 			m_renderThread->EnqueueCommand(Render::ERC::CreateRenderObject, RenderCore::DefaultGeometry::Cube(), renderObject);
+
+			const float spread = 100.0f;
+			Math::Vector3f position;
+			position.x = (float)rand() / RAND_MAX;
+			position.y = (float)rand() / RAND_MAX;
+			position.z = (float)rand() / RAND_MAX;
+			object.SetPosition(position * spread, m_renderThread->GetMainFrame());
+
+			unsigned index = (unsigned)rand() % 3;
+			switch (index)
+			{
+			case 0: { object.AddModule<Modules::BouncyMovement>(); } break;
+			case 1: { object.AddModule<Modules::PlayerController>(); } break;
+			case 2: { object.AddModule<Modules::FloatyMovement>(); } break;
+			default: break;
+			}
 		}
 
 		Core::g_InputHandler->RegisterCallback("GoForward", [&]() { Core::g_MainCamera->Move(Core::g_MainCamera->GetViewDir()); });
@@ -60,23 +78,7 @@ namespace GameEngine
 	{
 		for (int i = 0; i < m_Objects.size(); ++i)
 		{
-			Math::Vector3f pos = m_Objects[i]->GetPosition();
-
-			// Showcase
-			if (i == 0)
-			{
-				pos.x += 0.5f * dt;
-			}
-			else if (i == 1)
-			{
-				pos.y -= 0.5f * dt;
-			}
-			else if (i == 2)
-			{
-				pos.x += 0.5f * dt;
-				pos.y -= 0.5f * dt;
-			}
-			m_Objects[i]->SetPosition(pos, m_renderThread->GetMainFrame());
+			m_Objects[i]->UpdateModules(dt, m_renderThread->GetMainFrame());
 		}
 	}
 }
