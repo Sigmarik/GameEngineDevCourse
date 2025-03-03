@@ -3,17 +3,43 @@
 #include <ecsControl.h>
 #include <ecsMesh.h>
 #include <ecsPhys.h>
+#include <ecsShooting.h>
 #include <GameFramework/GameFramework.h>
 #include <Input/Controller.h>
 #include <RenderObject.h>
 
 using namespace GameEngine;
 
+void SpawnCubeProjectile(
+	flecs::world& world,
+	const GameEngine::Math::Vector3f& position,
+	const GameEngine::Math::Vector3f& direction,
+	flecs::entity& owner
+	)
+{
+	world.entity()
+		.set(Position{ position })
+		.set(Velocity{ direction * 40.0f })
+		.set(Gravity{ Math::Vector3f(0.f, -9.8065f, 0.f) })
+		.set(BouncePlane{ Math::Vector4f(0.f, 1.f, 0.f, 5.f) })
+		.set(Bounciness{ 1.f })
+		.set(FrictionAmount{ 0.9f })
+		.set(GeometryPtr{ RenderCore::DefaultGeometry::Cube() })
+		.set(RenderObjectPtr{ new Render::RenderObject() })
+
+		.set(Owner{ owner })
+		.set(ContactDamage{ 5.0f })
+		.set(SphereCollider{ 0.5f })
+		.set(TimedDespawn{ 5.0f });
+}
+
+
 void GameFramework::Init()
 {
 	RegisterEcsMeshSystems(m_World);
 	RegisterEcsControlSystems(m_World);
 	RegisterEcsPhysSystems(m_World);
+	RegisterEcsCombatSystems(m_World);
 
 	flecs::entity cubeControl = m_World.entity()
 		.set(Position{ Math::Vector3f(-2.f, 0.f, 0.f) })
@@ -35,13 +61,21 @@ void GameFramework::Init()
 		.set(BouncePlane{ Math::Vector4f(0.f, 1.f, 0.f, 5.f) })
 		.set(Bounciness{ 1.f })
 		.set(GeometryPtr{ RenderCore::DefaultGeometry::Cube() })
-		.set(RenderObjectPtr{ new Render::RenderObject() });
+		.set(RenderObjectPtr{ new Render::RenderObject() })
+		
+		.set(SphereCollider{1.0f})
+		.set(AmoRefill{3})
+		.set(CanDie{});
 
 	flecs::entity camera = m_World.entity()
 		.set(Position{ Math::Vector3f(0.0f, 12.0f, -10.0f) })
 		.set(Speed{ 10.f })
 		.set(CameraPtr{ Core::g_MainCamera })
-		.set(ControllerPtr{ new Core::Controller(Core::g_FileSystem->GetConfigPath("Input_default.ini")) });
+		.set(ControllerPtr{ new Core::Controller(Core::g_FileSystem->GetConfigPath("Input_default.ini")) })
+		
+		.set(PrimaryProjectile{ SpawnCubeProjectile })
+		.set(Magazine{ .capacity = 3, .count = 3 })
+		.set(ReloadDuration{ 3.0f });
 }
 
 void GameFramework::Update(float dt)
