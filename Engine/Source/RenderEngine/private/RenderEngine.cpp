@@ -55,6 +55,13 @@ namespace GameEngine::Render
 		HAL::RenderData* renderData = new HAL::RenderData(meshID, materialID);
 		renderObject->SetRenderData(renderData);
 
-		m_RenderObjects.push_back(renderObject);
+		m_RenderObjects.insert(renderObject);
+	}
+
+	void RenderEngine::RemoveRenderObject(RenderObject* renderObject)
+	{
+		assert(renderObject);
+
+		m_RenderObjects.erase(renderObject);
 	}
 }

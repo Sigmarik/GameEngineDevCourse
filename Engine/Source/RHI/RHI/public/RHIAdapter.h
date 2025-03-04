@@ -6,6 +6,8 @@
 #include <RHIMesh.h>
 #include <RHIMaterial.h>
 
+#include <set>
+
 namespace GameEngine
 {
 	namespace Render::HAL
@@ -39,6 +41,7 @@ namespace GameEngine
 			RHIAdapter() = default;
 
 		protected:
+			// We'll have to set up a propper mesh loading system...
 			std::vector<RHIMesh*> m_Meshes;
 			std::vector<RHIMaterial*> m_Materials;
 		};

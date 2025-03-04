@@ -3,6 +3,7 @@
 #include <ecsPhys.h>
 #include <ecsMesh.h>
 #include <ecsControl.h>
+#include <ecsEntityManagement.h>
 #include <Input/Controller.h>
 #include <Input/InputHandler.h>
 #include <Camera.h>
@@ -94,8 +95,8 @@ void RegisterEcsCombatSystems(flecs::world& world)
 				}
 			}
 
-			entityAlpha.destruct();
-			entityBeta.destruct();
+			ConsciousDestroy(entityAlpha);
+			ConsciousDestroy(entityBeta);
 		});
 	});
 
@@ -112,14 +113,7 @@ void RegisterEcsCombatSystems(flecs::world& world)
 
 		if (despawn.m_timeSinceStart > despawn.duration)
 		{
-			RenderObjectPtr* position = e.get_mut<RenderObjectPtr>();
-			if (position)
-			{
-				position->ptr->SetPosition(
-					GameEngine::Math::Vector3f(-9999.0f, -9999.0f, -9999.0f),
-					renderThread->ptr->GetMainFrame());
-			}
-			e.destruct();
+			ConsciousDestroy(e);
 		}
 	});
 

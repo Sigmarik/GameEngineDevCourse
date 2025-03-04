@@ -69,6 +69,13 @@ namespace GameEngine::Render
 					std::forward<Args>(args)...)
 			);
 			break;
+		case ERC::RemoveRenderObject:
+			m_commands[m_CurMainFrame].push_back(
+				new EnqueuedRenderCommand(
+					[this](RenderCore::Geometry::Ptr geometry, RenderObject* renderObject) { m_RenderEngine->RemoveRenderObject(renderObject); },
+					std::forward<Args>(args)...)
+			);
+			break;
 		default:
 			assert(0);
 			break;

@@ -5,6 +5,7 @@
 #include <Geometry.h>
 #include <RenderThread.h>
 #include <RenderObject.h>
+#include <ecsEntityManagement.h>
 
 using namespace GameEngine;
 
@@ -22,7 +23,18 @@ void RegisterEcsMeshSystems(flecs::world& world)
 	world.system<RenderObjectPtr, const Position>()
 		.each([&](RenderObjectPtr& renderObject, const Position& position)
 	{
+		if (!renderObject.ptr) return;
 		renderObject.ptr->SetPosition(position.value, renderThread->ptr->GetMainFrame());
+	});
+
+	world.system<RenderObjectPtr, const MarkedForDestruction>()
+		.each([&](flecs::entity e, RenderObjectPtr& renderObject, const MarkedForDestruction& marker)
+	{
+		if (renderObject.ptr == nullptr)
+			return;
+
+		renderThread->ptr->EnqueueCommand(Render::ERC::RemoveRenderObject, GameEngine::RenderCore::Geometry::Ptr(nullptr), renderObject.ptr);
+		renderObject.ptr = nullptr;
 	});
 }
 
