@@ -74,6 +74,8 @@ void RegisterEcsCombatSystems(flecs::world& world)
 		const SphereCollider& alphaCollider,
 		const CanDie&)
 	{
+		if (entityAlpha.has<MarkedForDestruction>()) return;
+
 		world.each([&](flecs::entity entityBeta,
 			const Position& betaPos,
 			const SphereCollider& betaCollider,
@@ -81,6 +83,7 @@ void RegisterEcsCombatSystems(flecs::world& world)
 		{
 			if (entityAlpha == entityBeta) return;
 			if (!entityBeta.is_alive()) return;
+			if (entityBeta.has<MarkedForDestruction>()) return;
 
 			float distance = (alphaPos.value - betaPos.value).GetLength();
 			if (distance > alphaCollider.radius + betaCollider.radius) return;
