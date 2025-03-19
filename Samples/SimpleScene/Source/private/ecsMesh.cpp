@@ -14,15 +14,17 @@ void RegisterEcsMeshSystems(flecs::world& world) {
 
     world.system<EntitySystem::ECS::RenderObjectPtr, const Position>()
         .each([&](EntitySystem::ECS::RenderObjectPtr& renderObject, const Position& position) {
-            renderObject.ptr->SetPosition(Math::Vector3f(position.x, position.y, position.z), renderThread->ptr->GetMainFrame());
-        });
+        if (!renderObject.ptr) return;
 
-    world.system<RenderObjectPtr, const MarkedForDestruction>()
-        .each([&](flecs::entity e, RenderObjectPtr& renderObject, const MarkedForDestruction& marker) {
-            if (renderObject.ptr == nullptr)
-                return;
+        renderObject.ptr->SetPosition(Math::Vector3f(position.x, position.y, position.z), renderThread->ptr->GetMainFrame());
+    });
 
-            renderThread->ptr->EnqueueCommand(Render::ERC::RemoveRenderObject, GameEngine::RenderCore::Geometry::Ptr(nullptr), renderObject.ptr);
-            renderObject.ptr = nullptr;
-        });
+    world.system<EntitySystem::ECS::RenderObjectPtr, const MarkedForDestruction>()
+        .each([&](flecs::entity e, EntitySystem::ECS::RenderObjectPtr& renderObject, const MarkedForDestruction& marker) {
+        if (renderObject.ptr == nullptr)
+            return;
+
+        renderThread->ptr->EnqueueCommand(Render::ERC::RemoveRenderObject, GameEngine::RenderCore::Geometry::Ptr(nullptr), renderObject.ptr);
+        renderObject.ptr = nullptr;
+    });
 }

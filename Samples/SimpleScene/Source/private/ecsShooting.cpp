@@ -49,7 +49,8 @@ void RegisterEcsCombatSystems(flecs::world& world)
 				--magazine->count;
 			}
 
-			projectile.spawner(world, position.value, camera.ptr->GetViewDir(), e);
+			GameEngine::Math::Vector3f pos{ position.x, position.y, position.z };
+			projectile.spawner(world, pos, camera.ptr->GetViewDir(), e);
 		}
 
 		if (magazine && magazine->count == 0)
@@ -85,7 +86,10 @@ void RegisterEcsCombatSystems(flecs::world& world)
 			if (!entityBeta.is_alive()) return;
 			if (entityBeta.has<MarkedForDestruction>()) return;
 
-			float distance = (alphaPos.value - betaPos.value).GetLength();
+			GameEngine::Math::Vector3f posA{ alphaPos.x, alphaPos.y, alphaPos.z };
+			GameEngine::Math::Vector3f posB{ betaPos.x,  betaPos.y,  betaPos.z };
+
+			float distance = (posA - posB).GetLength();
 			if (distance > alphaCollider.radius + betaCollider.radius) return;
 
 			if (entityAlpha.has<AmoRefill>() && entityBeta.has<Owner>())
