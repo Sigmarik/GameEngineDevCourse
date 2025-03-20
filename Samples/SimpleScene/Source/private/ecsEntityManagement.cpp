@@ -2,12 +2,14 @@
 
 void RegisterEcsEntityMgmtSystems(flecs::world& world)
 {
-	world.system<MarkedForDestruction>()
-		.each([&](flecs::entity e, MarkedForDestruction& marker)
+	world.system<CanBeDestroyed>()
+		.each([&](flecs::entity e, CanBeDestroyed& marker)
 	{
-		if (marker.justPlaced)
+		if (!marker.beingDestroyed) return;
+
+		if (!marker.thisTick)
 		{
-			marker.justPlaced = false;
+			marker.thisTick = true;
 		}
 		else
 		{
@@ -18,5 +20,6 @@ void RegisterEcsEntityMgmtSystems(flecs::world& world)
 
 void ConsciousDestroy(flecs::entity e)
 {
-	if (!e.has<MarkedForDestruction>()) e.set(MarkedForDestruction{});
+	assert(e.has<CanBeDestroyed>());
+	e.get_mut<CanBeDestroyed>()->beingDestroyed = true;
 }

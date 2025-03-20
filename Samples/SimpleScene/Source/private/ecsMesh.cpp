@@ -19,10 +19,10 @@ void RegisterEcsMeshSystems(flecs::world& world) {
         renderObject.ptr->SetPosition(Math::Vector3f(position.x, position.y, position.z), renderThread->ptr->GetMainFrame());
     });
 
-    world.system<EntitySystem::ECS::RenderObjectPtr, const MarkedForDestruction>()
-        .each([&](flecs::entity e, EntitySystem::ECS::RenderObjectPtr& renderObject, const MarkedForDestruction& marker) {
-        if (renderObject.ptr == nullptr)
-            return;
+    world.system<EntitySystem::ECS::RenderObjectPtr, const CanBeDestroyed>()
+        .each([&](flecs::entity e, EntitySystem::ECS::RenderObjectPtr& renderObject, const CanBeDestroyed& marker) {
+        if (!marker.beingDestroyed) return;
+        if (renderObject.ptr == nullptr) return;
 
         renderThread->ptr->EnqueueCommand(Render::ERC::RemoveRenderObject, GameEngine::RenderCore::Geometry::Ptr(nullptr), renderObject.ptr);
         renderObject.ptr = nullptr;

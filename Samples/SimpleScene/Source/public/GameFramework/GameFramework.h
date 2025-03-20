@@ -27,12 +27,15 @@ public:
 	}
 	~GameFramework() = default;
 
+	void CreateEntities();
+
+	static void RegisterComponents(flecs::world& world);
+
 public:
 	void Init();
 	void Update(float dt);
 
 private:
-	void RegisterComponents();
 	void RegisterSystems();
 
 private:

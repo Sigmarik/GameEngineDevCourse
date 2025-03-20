@@ -66,7 +66,7 @@ void RegisterEcsCombatSystems(flecs::world& world)
 	});
 
 	// Oh boy does Java not have boilerplate code compared to this...
-	world.system<
+	/*world.system<
 		const Position,
 		const SphereCollider,
 		const CanDie
@@ -75,7 +75,7 @@ void RegisterEcsCombatSystems(flecs::world& world)
 		const SphereCollider& alphaCollider,
 		const CanDie&)
 	{
-		if (entityAlpha.has<MarkedForDestruction>()) return;
+		if (entityAlpha.has<CanBeDestroyed>() && entityAlpha.get<CanBeDestroyed>()->beingDestroyed) return;
 
 		world.each([&](flecs::entity entityBeta,
 			const Position& betaPos,
@@ -84,7 +84,7 @@ void RegisterEcsCombatSystems(flecs::world& world)
 		{
 			if (entityAlpha == entityBeta) return;
 			if (!entityBeta.is_alive()) return;
-			if (entityBeta.has<MarkedForDestruction>()) return;
+			if (entityBeta.has<CanBeDestroyed>() && entityBeta.get<CanBeDestroyed>()->beingDestroyed) return;
 
 			GameEngine::Math::Vector3f posA{ alphaPos.x, alphaPos.y, alphaPos.z };
 			GameEngine::Math::Vector3f posB{ betaPos.x,  betaPos.y,  betaPos.z };
@@ -105,12 +105,12 @@ void RegisterEcsCombatSystems(flecs::world& world)
 			ConsciousDestroy(entityAlpha);
 			ConsciousDestroy(entityBeta);
 		});
-	});
+	});*/
 
 	static const GameEngine::EntitySystem::ECS::RenderThreadPtr* renderThread =
 		world.get<GameEngine::EntitySystem::ECS::RenderThreadPtr>();
 
-	world.system<
+	/*world.system<
 		TimedDespawn
 	>().each([&](flecs::entity e, TimedDespawn& despawn)
 	{
@@ -122,7 +122,7 @@ void RegisterEcsCombatSystems(flecs::world& world)
 		{
 			ConsciousDestroy(e);
 		}
-	});
+	});*/
 
 	world.system<
 		ReloadDuration,
