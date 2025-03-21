@@ -17,27 +17,36 @@
 
 using namespace GameEngine;
 
+void SpawnBullet(
+    flecs::world& world,
+    const GameEngine::Math::Vector3f& position,
+    const GameEngine::Math::Vector3f& direction,
+    flecs::entity& owner,
+    bool despawnAfterTime = true) {
+    GameEngine::Math::Vector3f velocity = direction * 40.0f;
+    world.entity()
+        .set(Position{ position.x, position.y, position.z })
+        .set(Velocity{ velocity.x, velocity.y, velocity.z })
+        .set(Gravity{ 0.f, -9.8065f, 0.f })
+        .set(BouncePlane{ 0.f, 1.f, 0.f, 5.f })
+        .set(Bounciness{ 1.f })
+        .set(FrictionAmount{ despawnAfterTime ? 0.9f : 0.0f })
+        .set(EntitySystem::ECS::GeometryPtr{ RenderCore::DefaultGeometry::Cube() })
+        .set(EntitySystem::ECS::RenderObjectPtr{ new Render::RenderObject() })
+
+        .set(Owner{ owner })
+        .set(ContactDamage{ 5.0f })
+        .set(SphereCollider{ 1.0f })
+        .set(TimedDespawn{ 5.0f, despawnAfterTime, 0.0f })
+        .set(CanBeDestroyed{ false, false });
+}
+
 void SpawnCubeProjectile(
     flecs::world& world,
     const GameEngine::Math::Vector3f& position,
     const GameEngine::Math::Vector3f& direction,
     flecs::entity& owner) {
-    GameEngine::Math::Vector3f velocity = direction * 40.0f;
-    world.entity()
-        .set(Position{position.x, position.y, position.z})
-        .set(Velocity{velocity.x, velocity.y, velocity.z})
-        .set(Gravity{0.f, -9.8065f, 0.f})
-        .set(BouncePlane{0.f, 1.f, 0.f, 5.f})
-        .set(Bounciness{1.f})
-        .set(FrictionAmount{0.9f})
-        .set(EntitySystem::ECS::GeometryPtr{RenderCore::DefaultGeometry::Cube()})
-        .set(EntitySystem::ECS::RenderObjectPtr{new Render::RenderObject()})
-
-        .set(Owner{owner})
-        .set(ContactDamage{5.0f})
-        .set(SphereCollider{1.0f})
-        .set(TimedDespawn{5.0f, true, 0.0f})
-        .set(CanBeDestroyed{false, false});
+    SpawnBullet(world, position, direction, owner);
 }
 
 void GameFramework::Init()
@@ -61,19 +70,6 @@ void GameFramework::CreateEntities() {
         .set(EntitySystem::ECS::RenderObjectPtr{ new Render::RenderObject() })
         .set(ControllerPtr{ new Core::Controller(Core::g_FileSystem->GetConfigPath("Input_default.ini")) });
 
-    flecs::entity cubeMoving = m_World.entity()
-        .set(Position{ 2.f, 0.f, 0.f })
-        .set(Velocity{ 0.f, 3.f, 0.f })
-        .set(Gravity{ 0.f, -9.8065f, 0.f })
-        .set(BouncePlane{ 0.f, 1.f, 0.f, 5.f })
-        .set(Bounciness{ 1.f })
-        .set(EntitySystem::ECS::GeometryPtr{ RenderCore::DefaultGeometry::Cube() })
-        .set(EntitySystem::ECS::RenderObjectPtr{ new Render::RenderObject() })
-        .set(AmoRefill{ 3 })
-        .set(CanDie{})
-        .set(SphereCollider{ 1.0f })
-        .set(CanBeDestroyed{ false, false });
-
     flecs::entity camera = m_World.entity()
         .set(Position{ 0.0f, 12.0f, -10.0f })
         .set(Speed{ 10.f })
@@ -82,6 +78,14 @@ void GameFramework::CreateEntities() {
         .set(PrimaryProjectile{ SpawnCubeProjectile })
         .set(Magazine{ .capacity = 3, .count = 3 })
         .set(ReloadDuration{ 3.0f });
+
+    SpawnBullet(
+        m_World,
+        GameEngine::Math::Vector3f(2.0f, 3.0f, 0.0f),
+        GameEngine::Math::Vector3f(0.0f, 0.1f, 0.0f),
+        camera,
+        false
+    );
 }
 
 void GameFramework::RegisterComponents(flecs::world& world)
