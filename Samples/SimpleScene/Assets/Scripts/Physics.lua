@@ -86,8 +86,6 @@ local function CollideColliders(it)
 	-- parameters in related components.
 	-- This still does not answer the question of "how to write
 	-- inter-entity interactions that are purely gameplay-specific", though...
-
-	-- I even though I have found the culprit once. 
 	for collider_1, position_1, velocity_1, ent_1 in ecs.each(it) do
 		for collider_2, position_2, velocity_2, ent_2 in ecs.each(it) do
 			-- This is the shittiest physics simulation I've ever created...
