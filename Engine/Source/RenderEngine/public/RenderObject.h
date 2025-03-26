@@ -28,7 +28,11 @@ namespace GameEngine::Render
 		const Math::Vector3f& GetPosition(size_t frame) const;
 		void SetPosition(Math::Vector3f position, size_t frame);
 
+		void SetVisible(bool visible) { m_visible = visible; }
+		bool GetVisible() const { return m_visible; }
+
 	protected:
 		HAL::RenderData* m_RenderData = nullptr;
+		bool m_visible = true;
 	};
 }

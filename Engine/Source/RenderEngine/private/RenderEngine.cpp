@@ -24,6 +24,8 @@ namespace GameEngine::Render
 
 		for (RenderObject* renderObject : m_RenderObjects)
 		{
+			if (!renderObject->GetVisible()) continue;
+
 			m_rhi->Draw(renderObject->GetRenderData(), frame);
 		}
 

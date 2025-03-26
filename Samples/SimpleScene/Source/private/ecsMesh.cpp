@@ -17,6 +17,12 @@ void RegisterEcsMeshSystems(flecs::world& world)
 	{
 		renderObject.ptr->SetPosition(Math::Vector3f(position.x, position.y, position.z), renderThread->ptr->GetMainFrame());
 	});
+
+	world.system<EntitySystem::ECS::RenderObjectPtr, const Visibility>()
+		.each([&](EntitySystem::ECS::RenderObjectPtr& renderObject, const Visibility& visibility)
+	{
+		renderObject.ptr->SetVisible(visibility.visible);
+	});
 }
 
 
