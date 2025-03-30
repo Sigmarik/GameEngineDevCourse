@@ -9,6 +9,17 @@ namespace GameEngine::World
 
 	void Level::AddLevelObject(const LevelObject& levelObject)
 	{
-		m_LevelObjectList.push_back(levelObject);
+		m_LevelObjectList.insert({ levelObject.GetId(), levelObject });
+	}
+
+	LevelObject* Level::GetLevelObject(Id id)
+	{
+		auto found = m_LevelObjectList.find(id);
+		if (found != m_LevelObjectList.end()) [[likely]]
+		{
+			return &found->second;
+		}
+
+		return nullptr;
 	}
 }

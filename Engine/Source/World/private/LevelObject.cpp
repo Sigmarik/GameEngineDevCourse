@@ -2,8 +2,21 @@
 
 namespace GameEngine::World
 {
-	void LevelObject::AddComponent(const ComponentName& name, const ComponentDesc& desc)
+	Id LevelObject::AddComponent(const ComponentName& name, const ComponentDesc& desc)
 	{
-		m_ComponentList.push_back(std::make_pair(name, desc));
+		Component component{name, desc};
+		m_ComponentList.insert({ component.GetId(), component});
+		return component.GetId();
+	}
+
+	LevelObject::Component* LevelObject::GetComponent(Id id)
+	{
+		auto found = m_ComponentList.find(id);
+		if (found != m_ComponentList.end()) [[likely]]
+		{
+			return &found->second;
+		}
+
+		return nullptr;
 	}
 }

@@ -9,7 +9,7 @@ namespace GameEngine::World
 	class WORLD_API Level final
 	{
 	public:
-		using LevelObjectList = std::vector<LevelObject>;
+		using LevelObjectList = std::map<Id, LevelObject>;
 
 	public:
 		Level() = delete;
@@ -19,6 +19,7 @@ namespace GameEngine::World
 	public:
 		void AddLevelObject(const LevelObject& levelObject);
 		const LevelObjectList& GetLevelObjects() const { return m_LevelObjectList; }
+		LevelObject* GetLevelObject(Id id);
 		LevelObjectList& GetLevelObjects() { return m_LevelObjectList; }
 
 		const std::string& GetName() const { return m_Name; }

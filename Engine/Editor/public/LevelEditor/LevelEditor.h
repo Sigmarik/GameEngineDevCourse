@@ -22,11 +22,16 @@ namespace GameEngine
 
 		private:
 			void Save();
+			void CreateCube();
+
+			void RegisterToFlecs(World::LevelObject& object);
 
 		private:
 			Core::Timer m_SaveButtonMessageTimer;
 			bool m_SaveButtonPressed = false;
 			float m_TimeToShowSaveButtonMessage = 3.f;
+
+			flecs::world* m_FlecsWorld = nullptr;
 
 			std::optional<World::Level> m_Level = std::nullopt;
 		};
